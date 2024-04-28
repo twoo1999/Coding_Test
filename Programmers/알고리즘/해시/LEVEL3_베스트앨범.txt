@@ -1,0 +1,52 @@
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        int[] answer = {};
+        ArrayList<Integer> re = new ArrayList<>();
+        HashMap<String, HashMap<Integer, Integer>> map = new HashMap<>();
+        HashMap<String, Integer> playCntMap = new HashMap<>();
+        int len = plays.length;
+        
+        for(int i =0 ; i < len; i++){
+            String genre = genres[i];
+            int play = plays[i];
+            if(!map.containsKey(genre)){
+                HashMap<Integer, Integer> newMap = new HashMap<>();
+                newMap.put(i, play);
+                map.put(genre, newMap);
+                
+                playCntMap.put(genre, play);
+            } else{
+                map.get(genre).put(i, play);
+                playCntMap.put(genre, playCntMap.get(genre)+play);
+            }
+        }
+        
+        ArrayList<String> sortedGenres = new ArrayList<>(map.keySet());
+        Collections.sort(sortedGenres, (String x, String y)->{
+           return playCntMap.get(y) - playCntMap.get(x);
+        });
+        
+        for(String genre : sortedGenres){
+            HashMap<Integer, Integer> songMap= map.get(genre);
+            ArrayList<Integer> l = new ArrayList<>(songMap.keySet());
+            Collections.sort(l, (Integer x, Integer y) -> {
+                int xVal = songMap.get(x);
+                int yVal = songMap.get(y);
+                return xVal == yVal ? x-y : yVal-xVal; 
+            });
+            
+            re.add(l.get(0));
+            if(l.size() >= 2){
+                re.add(l.get(1));    
+            }
+            
+        }
+        
+        return re.stream()
+	            .mapToInt(Integer::intValue)
+    	        .toArray();
+    }
+}
