@@ -13,7 +13,7 @@ class Solution {
 
         next[n - 1] = -1;
 
-        Stack<int[]> st = new Stack<>();
+        Stack<Integer> st = new Stack<>();
 
         for (String c : cmd) {
             String[] command = c.split(" ");
@@ -21,7 +21,6 @@ class Solution {
             switch (type) {
                 case "D":
                     int cnt = Integer.parseInt(command[1]);
-                    int end;
                     for (int i = 0; i < cnt; i++) {
                         k = next[k];
                     }
@@ -33,7 +32,7 @@ class Solution {
                     }
                     break;
                 case "C":
-                    st.push(new int[]{prev[k], k, next[k]});
+                    st.push(k);
                     if(prev[k] != -1) next[prev[k]] = next[k];
                     if(next[k] != -1) prev[next[k]] = prev[k];
 
@@ -41,9 +40,9 @@ class Solution {
                     else k = next[k];
                     break;
                 case "Z":
-                    int[] d = st.pop();
-                    if(d[0] != -1) next[d[0]] = d[1];
-                    if(d[2] != -1) prev[d[2]] = d[1];
+                    int d = st.pop();
+                    if(prev[d] != -1) next[prev[d]] = d;
+                    if(next[d] != -1) prev[next[d]] = d;
 
             }
         }
@@ -55,7 +54,7 @@ class Solution {
         Arrays.fill(str, 'O');
 
         while (!st.isEmpty()) {
-            str[st.pop()[1]] = 'X';
+            str[st.pop()] = 'X';
         }
         answer = new String(str);
 
