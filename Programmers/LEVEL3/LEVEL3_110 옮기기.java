@@ -5,50 +5,55 @@ class Solution {
 
 
         answer = new String[s.length];
-        for (int ii = 0 ; ii < s.length; ii++) {
-            String str = s[ii];
-            int start = 0;
 
-            StringBuilder sb = new StringBuilder(str);
-
-            while (true) {
-                int idx = sb.indexOf("110", start);
-                if(idx == -1){
-                    break;
-                }
-                sb.replace(idx, idx+3, "");
-                int zeroIdx = sb.indexOf("0", start);
-                if (zeroIdx == -1) {
-                    sb.insert(start, "110");
-                    break;
-                }
-                while (zeroIdx != -1) {
-                    boolean f = false;
-                    for (int i = start; i <= zeroIdx; i++) {
-                        if(start + 2 < zeroIdx){
-                            sb.insert(i, "110");
-                            start = i+3;
-                            idx = sb.indexOf("110", start);
-                            f = true;
-                            break;
-                        }
-                    }
-                    if(f){
-                        break;
-                    }
-
-                    start = zeroIdx+1;
-                    zeroIdx = sb.indexOf("0", start);
-                }
-
-                if(zeroIdx == -1){
-                    sb.insert(start, "110");
-                }
-
-
-
+        for (int a = 0; a < answer.length; a++) {
+            String ss = s[a];
+            StringBuilder sb = new StringBuilder(ss);
+            int idx = ss.indexOf("110");
+            int cnt = 0;
+            while (idx != -1) {
+                sb.replace(idx, idx + 3, "");
+                cnt++;
+                idx = sb.indexOf("110");
             }
-            answer[ii] = sb.toString();
+
+
+            for (int i = 2; i < sb.length(); i++) {
+                if(sb.charAt(i) == '1' && sb.charAt(i-1) == '1' && sb.charAt(i-2) == '1'){
+                    sb.insert(i-2, "110");
+                    i+=2;
+                    cnt--;
+                }
+
+                if (cnt == 0) {
+                    break;
+                }
+            }
+
+            if (cnt != 0) {
+                int len = sb.length();
+                String repeat = "110".repeat(cnt);
+                if (len == 1) {
+                    sb.insert(sb.charAt(0) == '0'?1 : 0, repeat);
+                } else if (len == 2) {
+                    String str = sb.toString();
+                    if(str.equals("11")){
+                        sb.insert(0, repeat);
+                    } else if(str.equals("10")){
+                        sb.insert(2, repeat);
+                    } else if(str.equals("01")){
+                        sb.insert(1, repeat);
+                    } else if(str.equals("00")){
+                        sb.insert(2, repeat);
+                    }
+                } else{
+                    sb.insert(len, repeat);
+                }
+            }
+
+
+            answer[a] = sb.toString();
+
         }
 
 
